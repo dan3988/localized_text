@@ -98,6 +98,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Text'**
   String get test;
+
+  /// No description provided for @placeholders.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello {firstName} {lastName}'**
+  String placeholders({required String firstName, required String lastName});
+
+  /// A gendered message
+  ///
+  /// In en, this message translates to:
+  /// **'{gender, select, male{he} female{she} other{they}}'**
+  String pronoun({required String gender});
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

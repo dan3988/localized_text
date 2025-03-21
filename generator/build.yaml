@@ -3,7 +3,7 @@ builders:
     import: "package:localized_text_key_generator/builder.dart"
     builder_factories: ["localizedWidgetGenerator"]
     auto_apply: dependents
-    applies_builders: ["combining_builder"]
+    applies_builders: ["source_gen"]
     build_to: source
     build_extensions:
-      "$lib$": [".g.dart"]
+      ".dart": [".keys.dart"]

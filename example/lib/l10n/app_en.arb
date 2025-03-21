@@ -1,3 +1,25 @@
 {
-  "test": "Text"
+  "test": "Text",
+  "placeholders": "Hello {firstName} {lastName}",
+  "@placeholders": {
+    "placeholders": {
+      "firstName": {
+        "type": "String",
+        "example": "Joe"
+      },
+      "lastName": {
+        "type": "String",
+        "example": "Blogs"
+      }
+    }
+  },
+  "pronoun": "{gender, select, male{he} female{she} other{they}}",
+  "@pronoun": {
+    "description": "A gendered message",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  }
 }

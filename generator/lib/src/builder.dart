@@ -1,79 +1,62 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:build/build.dart';
 import 'package:code_builder/code_builder.dart';
-import 'package:dart_style/dart_style.dart';
+import 'package:source_gen/source_gen.dart';
 
 import 'code.dart';
 
-class LocalizedWidgetBuilder extends Builder {
+class LocalizedTextKeyGenerator extends Generator {
   final String className;
   final String classPath;
-  final String templatePath;
+  final bool namedParameters;
 
-  @override
-  get buildExtensions => const { '.arb': ['.g.dart'] };
-
-  LocalizedWidgetBuilder({
+  LocalizedTextKeyGenerator({
     required this.className,
     required this.classPath,
-    required this.templatePath,
+    required this.namedParameters,
   });
 
   @override
-  build(buildStep) async {
+  generate(library, buildStep) {
     final id = buildStep.inputId;
-    if (id.path == templatePath) {
-      final file = File(id.path);
-      final Map<String, dynamic> json = await file.readAsString().then((v) => jsonDecode(v));
-      final names = json.keys.where((v) => !v.startsWith('@')).toList();
-      if (names.isNotEmpty) {
-        final library = buildLibrary(className, AssetId(id.package, classPath).uri, names);
-        final outputId = id.changeExtension('.g.dart');
+    if (id.path == classPath) {
+      //final file = File(id.path);
+      final type = library.findType(className);
+      if (type == null) {
+        log.warning('Could not find type "$className" in file "${id.path}"');
+        return null;
+      }
+
+      final entries = <LocalizedEntry>[];
+
+      for (final field in type.fields) {
+        final getter = field.getter;
+        if (getter != null && getter.isAbstract) {
+          entries.add(SimpleLocalizedEntry(field.name, getter.documentationComment));
+        }
+      }
+
+      for (final method in type.methods) {
+        if (method.isAbstract) {
+          final parameters = [
+            for (final parameter in method.parameters)
+              LocalizedTextParameter(parameter.name, refer('${parameter.type}')),
+          ];
+
+          entries.add(ComplexLocalizedEntry(method.name, method.documentationComment, parameters, namedParameters));
+        }
+      }
+
+      if (entries.isNotEmpty) {
+        final library = buildLibrary(className, AssetId(id.package, classPath).uri, entries);
+        //final outputId = id.changeExtension('.g.dart');
         final emitter = DartEmitter.scoped();
-        final formatter = DartFormatter(languageVersion: DartFormatter.latestLanguageVersion);
-        final unformatted = library.accept(emitter).toString();
-        final text = formatter.format(unformatted);
-        //final text = formatter.format(source)
-        await buildStep.writeAsString(outputId, text);
+        return library.accept(emitter).toString();
+        // final formatter = DartFormatter(languageVersion: DartFormatter.latestLanguageVersion);
+        // final unformatted = library.accept(emitter).toString();
+        // final text = formatter.format(unformatted, uri: outputId.uri);
       }
     }
-  }
-}
 
-//
-// class LocalizedWidgetGenerator extends Generator {
-//   final String className;
-//   final String filePath;
-//
-//   const LocalizedWidgetGenerator({
-//     required this.className,
-//     required this.filePath,
-//   });
-//
-//   @override
-//   generate(library, buildStep) async {
-//     final source = library.element.source;
-//     final path = _getFilePath(source.uri);
-//     if (path != filePath) {
-//       return null;
-//     }
-//
-//     final type = library.findType(className);
-//     final reference = refer(className, 'package:${buildStep.inputId.package}/${buildStep.inputId.path}');
-//     final library = buildLibrary();
-//
-//     return super.generate(library, buildStep);
-//   }
-// }
-
-String? _getFilePath(Uri uri) {
-  final Uri(:scheme, :path) = uri;
-  if (scheme != 'package') {
     return null;
   }
-
-  final i = path.indexOf('/');
-  return 'lib${path.substring(i)}';
 }
