@@ -1,0 +1,9 @@
+name: localized_text_workspace
+publish_to: none
+environment:
+  sdk: ^3.6.1
+  flutter: ">=1.17.0"
+workspace:
+  - core
+  - example
+  - generator

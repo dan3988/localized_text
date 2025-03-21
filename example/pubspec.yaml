@@ -1,0 +1,23 @@
+name: localized_text_example
+resolution: workspace
+
+environment:
+  sdk: ^3.6.1
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+  localized_text_widget:
+    path: ../core
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  localized_text_key_generator:
+    path: ../generator
+  build_runner: ^2.4.15
