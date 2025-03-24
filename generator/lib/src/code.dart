@@ -135,6 +135,7 @@ Library buildLibrary({
 }) {
   return Library((library) {
     final localizationsRef = refer('l.$localizationsClass');
+    library.ignoreForFile.add('prefer_relative_imports');
     library.directives.addAll([
       Directive.import(self),
       Directive.import(localizationsUri, as: 'l'),

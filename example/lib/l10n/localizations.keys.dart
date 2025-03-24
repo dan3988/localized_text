@@ -5,6 +5,8 @@
 // LocalizedTextKeyGenerator
 // **************************************************************************
 
+// ignore_for_file: prefer_relative_imports
+
 import 'package:localized_text_widget/localized_text_widget.dart';
 import 'package:localized_text_example/l10n/localizations.dart' as l;
 
