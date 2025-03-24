@@ -1,0 +1,7 @@
+targets:
+  $default:
+    builders:
+      localized_text_key_generator:
+        options:
+          output_class: AppText
+          named_parameters: true

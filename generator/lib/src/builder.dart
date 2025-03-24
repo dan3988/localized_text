@@ -3,16 +3,19 @@ import 'package:code_builder/code_builder.dart';
 import 'package:source_gen/source_gen.dart';
 
 import 'code.dart';
+import 'settings.dart';
 
 class LocalizedTextKeyGenerator extends Generator {
   final String className;
   final String classPath;
   final bool namedParameters;
+  final Settings settings;
 
   LocalizedTextKeyGenerator({
     required this.className,
     required this.classPath,
     required this.namedParameters,
+    required this.settings,
   });
 
   @override
@@ -42,18 +45,22 @@ class LocalizedTextKeyGenerator extends Generator {
               LocalizedTextParameter(parameter.name, refer('${parameter.type}')),
           ];
 
-          entries.add(ComplexLocalizedEntry(method.name, method.documentationComment, parameters, namedParameters));
+          entries.add(ComplexLocalizedEntry(method.name, method.documentationComment, parameters));
         }
       }
 
       if (entries.isNotEmpty) {
-        final library = buildLibrary(className, AssetId(id.package, classPath).uri, entries);
-        //final outputId = id.changeExtension('.g.dart');
+        final localizationsUri = AssetId(id.package, classPath).uri;
+        final library = buildLibrary(
+          settings: settings,
+          localizationsClass: className,
+          localizationsUri: localizationsUri.toString(),
+          namedLocalizationParameters: namedParameters,
+          entries: entries,
+        );
+
         final emitter = DartEmitter.scoped();
         return library.accept(emitter).toString();
-        // final formatter = DartFormatter(languageVersion: DartFormatter.latestLanguageVersion);
-        // final unformatted = library.accept(emitter).toString();
-        // final text = formatter.format(unformatted, uri: outputId.uri);
       }
     }
 

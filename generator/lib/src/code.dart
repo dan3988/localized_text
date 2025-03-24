@@ -1,5 +1,7 @@
 import 'package:code_builder/code_builder.dart';
 
+import 'settings.dart';
+
 const self = 'package:localized_text_widget/localized_text_widget.dart';
 
 sealed class LocalizedEntry {
@@ -8,16 +10,16 @@ sealed class LocalizedEntry {
 
   const LocalizedEntry(this.name, [this.doc]);
 
-  void _buildClass(ClassBuilder rootClass, ClassBuilder implClass, String localizationName);
+  void _buildClass(ClassBuilder rootClass, ClassBuilder implClass, String localizationName, bool preferNamed);
 
-  Code _buildGetBody();
+  Code _buildGetBody(bool namedLocalizationParameters);
 }
 
 final class SimpleLocalizedEntry extends LocalizedEntry {
   const SimpleLocalizedEntry(super.name, [super.doc]);
 
   @override
-  _buildClass(rootClass, implClass, localizationName) {
+  _buildClass(rootClass, implClass, localizationName, preferNamed) {
     rootClass.fields.add(
         Field((b) {
           if (doc != null) {
@@ -36,7 +38,7 @@ final class SimpleLocalizedEntry extends LocalizedEntry {
   }
 
   @override
-  _buildGetBody() => Code('return l.$name;');
+  _buildGetBody(namedLocalizationParameters) => Code('return l.$name;');
 
   @override
   toString() => 'SimpleLocalizedEntry($name)';
@@ -54,12 +56,11 @@ final class LocalizedTextParameter {
 
 final class ComplexLocalizedEntry extends LocalizedEntry {
   final List<LocalizedTextParameter> parameters;
-  final bool namedParameters;
 
-  const ComplexLocalizedEntry(super.name, super.doc, this.parameters, this.namedParameters);
+  const ComplexLocalizedEntry(super.name, super.doc, this.parameters);
 
   @override
-  _buildClass(rootClass, implClass, localizationName) {
+  _buildClass(rootClass, implClass, localizationName, preferNamed) {
     rootClass.constructors.add(
         Constructor((b) {
           if (doc != null) {
@@ -70,7 +71,7 @@ final class ComplexLocalizedEntry extends LocalizedEntry {
           b.constant = true;
           b.factory = true;
           b.redirect = refer(implClass.name!);
-          b.addParameters(namedParameters, parameters, (b, parameter) {
+          b.addParameters(preferNamed, parameters, (b, parameter) {
             b.name = parameter.name;
             b.type = parameter.type;
           });
@@ -89,7 +90,7 @@ final class ComplexLocalizedEntry extends LocalizedEntry {
     implClass.constructors.add(
         Constructor((b) {
           b.constant = true;
-          b.addParameters(namedParameters, parameters, (b, parameter) {
+          b.addParameters(preferNamed, parameters, (b, parameter) {
             b.name = parameter.name;
             b.toThis = true;
           });
@@ -98,12 +99,12 @@ final class ComplexLocalizedEntry extends LocalizedEntry {
   }
 
   @override
-  _buildGetBody() {
+  _buildGetBody(namedLocalizationParameters) {
     final buffer = StringBuffer();
     buffer.write('return l.$name(');
     for (var i = 0; i < parameters.length; ) {
       final LocalizedTextParameter(:name) = parameters[i];
-      if (namedParameters) {
+      if (namedLocalizationParameters) {
         buffer..write(name)..write(':');
       }
 
@@ -125,16 +126,23 @@ final class ComplexLocalizedEntry extends LocalizedEntry {
   toString() => 'ComplexLocalizedEntry($name, ${parameters.map((v) => v.name).join(', ')})';
 }
 
-Library buildLibrary(String localizationsType, Uri localizationsUrl, List<LocalizedEntry> entries) {
+Library buildLibrary({
+  required Settings settings,
+  required String localizationsClass,
+  required String localizationsUri,
+  required bool namedLocalizationParameters,
+  required List<LocalizedEntry> entries,
+}) {
   return Library((library) {
-    final localizationsRef = refer('l.$localizationsType');
+    final localizationsRef = refer('l.$localizationsClass');
     library.directives.addAll([
       Directive.import(self),
-      Directive.import('$localizationsUrl', as: 'l'),
+      Directive.import(localizationsUri, as: 'l'),
     ]);
 
+    final preferNamed = settings.namedParameters ?? namedLocalizationParameters;
     final mainClassBuilder = ClassBuilder();
-    final mainClassName = '${localizationsType}Key';
+    final mainClassName = settings.outputClass ?? '${localizationsClass}Key';
 
     mainClassBuilder.name = mainClassName;
     mainClassBuilder.sealed = true;
@@ -154,12 +162,12 @@ Library buildLibrary(String localizationsType, Uri localizationsUrl, List<Locali
           Method((b) {
             b.name = 'getFor';
             b.annotations.add(refer('override'));
-            b.body = entry._buildGetBody();
+            b.body = entry._buildGetBody(namedLocalizationParameters);
             b.requiredParameters.add(Parameter((b) => b.name = 'l'));
           }),
         );
 
-        entry._buildClass(mainClassBuilder, b, localizationsRef.symbol!);
+        entry._buildClass(mainClassBuilder, b, localizationsClass, preferNamed);
       });
 
       library.body.add(clazz);

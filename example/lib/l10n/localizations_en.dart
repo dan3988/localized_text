@@ -12,12 +12,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get test => 'Text';
 
   @override
-  String placeholders({required String firstName, required String lastName}) {
+  String placeholders(String firstName, String lastName) {
     return 'Hello $firstName $lastName';
   }
 
   @override
-  String pronoun({required String gender}) {
+  String pronoun(String gender) {
     String _temp0 = intl.Intl.selectLogic(
       gender,
       {

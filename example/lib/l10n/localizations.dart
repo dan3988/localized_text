@@ -103,13 +103,13 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Hello {firstName} {lastName}'**
-  String placeholders({required String firstName, required String lastName});
+  String placeholders(String firstName, String lastName);
 
   /// A gendered message
   ///
   /// In en, this message translates to:
   /// **'{gender, select, male{he} female{she} other{they}}'**
-  String pronoun({required String gender});
+  String pronoun(String gender);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

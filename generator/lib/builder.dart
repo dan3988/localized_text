@@ -7,12 +7,13 @@ import 'package:source_gen/source_gen.dart';
 import 'package:yaml/yaml.dart';
 
 import 'src/builder.dart';
+import 'src/settings.dart';
 
 Builder localizedWidgetGenerator(BuilderOptions options) {
   final Generator generator;
   final file = File('l10n.yaml');
   if (!file.existsSync()) {
-    log.warning('File "l10n.yaml" not found.');
+    log.warning('l10n.yaml does not exist.');
     generator = const _EmptyGenerator();
   } else {
     final text = file.readAsStringSync();
@@ -28,6 +29,7 @@ Builder localizedWidgetGenerator(BuilderOptions options) {
       classPath: '$directory/$outputFile',
       className: className,
       namedParameters: namedParameters,
+      settings: Settings.fromJson(options.config),
     );
   }
 
