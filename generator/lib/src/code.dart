@@ -141,6 +141,7 @@ Library buildLibrary({
       Directive.import(localizationsUri, as: 'l'),
     ]);
 
+    final override = refer('override');
     final preferNamed = settings.namedParameters ?? namedLocalizationParameters;
     final mainClassBuilder = ClassBuilder();
     final mainClassName = settings.outputClass ?? '${localizationsClass}Key';
@@ -159,14 +160,19 @@ Library buildLibrary({
         b.name = className;
         b.modifier = ClassModifier.final$;
         b.extend = refer(mainClassName);
-        b.methods.add(
+        b.methods.addAll([
           Method((b) {
             b.name = 'getFor';
-            b.annotations.add(refer('override'));
+            b.annotations.add(override);
             b.body = entry._buildGetBody(namedLocalizationParameters);
             b.requiredParameters.add(Parameter((b) => b.name = 'l'));
           }),
-        );
+          Method((b) {
+            b.name = 'toString';
+            b.annotations.add(override);
+            b.body = Code('return \'$mainClassName("${entry.name}")\';');
+          }),
+        ]);
 
         entry._buildClass(mainClassBuilder, b, localizationsClass, preferNamed);
       });

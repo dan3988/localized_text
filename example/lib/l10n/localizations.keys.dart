@@ -42,6 +42,11 @@ final class _C0 extends AppText {
   getFor(l) {
     return l.test;
   }
+
+  @override
+  toString() {
+    return 'AppText("test")';
+  }
 }
 
 final class _C1 extends AppText {
@@ -58,6 +63,11 @@ final class _C1 extends AppText {
   getFor(l) {
     return l.placeholders(firstName, lastName);
   }
+
+  @override
+  toString() {
+    return 'AppText("placeholders")';
+  }
 }
 
 final class _C2 extends AppText {
@@ -68,5 +78,10 @@ final class _C2 extends AppText {
   @override
   getFor(l) {
     return l.pronoun(gender);
+  }
+
+  @override
+  toString() {
+    return 'AppText("pronoun")';
   }
 }
