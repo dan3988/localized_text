@@ -1,5 +1,6 @@
 name: localized_text_widget
 description: Use with the `localized_text_key_generator` package to simplify text widgets with localized text
+version: 0.1.0
 repository: https://github.com/dan3988/localized_text/tree/master/core
 resolution: workspace
 
