@@ -1,6 +1,6 @@
 builders:
   localized_text_key_generator:
-    import: "package:localized_text_key_generator/builder.dart"
+    import: "package:localized_text_key_generator/localized_text_key_generator.dart"
     builder_factories: ["localizedWidgetGenerator"]
     auto_apply: dependents
     applies_builders: ["source_gen"]
