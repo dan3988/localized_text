@@ -1,4 +1,4 @@
-# localized_text_key_generator
+# localized_text_key_generator [![Pub Package](https://img.shields.io/pub/v/localized_text_key_generator.svg)](https://pub.dev/packages/localized_text_key_generator)
 
 Code generator that creates an implementation of [LocalizedText](../core/lib/src/getter.dart) for each key in an .arb file
 

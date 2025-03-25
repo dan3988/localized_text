@@ -1,6 +1,6 @@
-# localized_text_widget
+# localized_text_widget [![Pub Package](https://img.shields.io/pub/v/localized_text_widget.svg)](https://pub.dev/packages/localized_text_widget)
 
-Use with the `localized_text_key_generator` package to simplify text widgets with localized text using .arb files
+Use with the [`localized_text_key_generator`](../generator) package to simplify text widgets with localized text using .arb files
 
 ## Example
 
