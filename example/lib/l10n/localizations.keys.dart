@@ -5,7 +5,7 @@
 // LocalizedTextKeyGenerator
 // **************************************************************************
 
-// ignore_for_file: prefer_relative_imports
+// ignore_for_file: prefer_relative_imports, require_trailing_commas
 
 import 'package:localized_text_widget/localized_text_widget.dart';
 import 'package:localized_text_example/l10n/localizations.dart' as l;
