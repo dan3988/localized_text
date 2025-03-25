@@ -21,6 +21,7 @@ final class _StaticLocalizedText extends LocalizedText {
 
 abstract class LocalizedTextGetter<T extends Object> extends LocalizedText {
   const LocalizedTextGetter() : super();
+  const factory LocalizedTextGetter.getter(String Function(T localizations) getter) = _LocalizedTextGetter;
 
   @override
   get(context) {
@@ -31,4 +32,15 @@ abstract class LocalizedTextGetter<T extends Object> extends LocalizedText {
 
   @protected
   getFor(T localizations);
+}
+
+final class _LocalizedTextGetter<T extends Object> extends LocalizedTextGetter<T> {
+  final String Function(T localizations) _getter;
+
+  const _LocalizedTextGetter(this._getter);
+
+  @override
+  getFor(localizations) {
+    return _getter(localizations);
+  }
 }

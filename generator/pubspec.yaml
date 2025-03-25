@@ -1,5 +1,5 @@
 name: localized_text_key_generator
-description: Code generator that generates an enum for .arb files
+description: Code generator that generates keys for .arb files
 repository: https://github.com/dan3988/localized_text/tree/master/generator
 resolution: workspace
 

@@ -4,12 +4,10 @@
   "@placeholders": {
     "placeholders": {
       "firstName": {
-        "type": "String",
-        "example": "Joe"
+        "type": "String"
       },
       "lastName": {
-        "type": "String",
-        "example": "Blogs"
+        "type": "String"
       }
     }
   },
