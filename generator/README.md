@@ -2,6 +2,22 @@
 
 Code generator that creates an implementation of [LocalizedText](../core/lib/src/getter.dart) for each key in an .arb file
 
+## Configuration
+
+```yaml
+targets:
+  $default:
+    builders:
+      localized_text_key_generator:
+        options:
+          #options
+```
+
+| Option             | Description                                                                                    | Default                                                                 |
+|--------------------|------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
+| `named_parameters` | Whether the constructors generated for messages with placeholders should have named parameters | The value of `use-named-parameters` in l10n.yaml                        |
+| `output_class`     | The name of the generated class                                                                | The value of `output-class` in l10n.yaml with `Key` appended to the end |
+
 ## Example
 
 `app_en.arb`:
