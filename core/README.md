@@ -7,9 +7,9 @@ Use with the `localized_text_key_generator` package to simplify text widgets wit
 This can be used to simplify
 ```dart
 return Builder(
-	builder: (context) {
-		return Text(AppLocalizations.of(context)!.text);
-	},
+  builder: (context) {
+    return Text(AppLocalizations.of(context)!.text);
+  },
 )
 ```
 to

@@ -117,9 +117,9 @@ final class _C2 extends AppLocalizationsKey {
 This can be used to simplify
 ```dart
 return Builder(
-	builder: (context) {
-		return Text(AppLocalizations.of(context)!.text);
-	},
+  builder: (context) {
+    return Text(AppLocalizations.of(context)!.text);
+  },
 )
 ```
 to
