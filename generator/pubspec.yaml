@@ -1,6 +1,6 @@
 name: localized_text_key_generator
-description: Code generator that generates keys for .arb files
-version: 0.1.0
+description: Code generator that generates implementations of `LocalizedText` for the `localized_text_widget` package
+version: 0.1.1
 repository: https://github.com/dan3988/localized_text/tree/master/generator
 resolution: workspace
 
