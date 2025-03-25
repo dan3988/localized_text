@@ -39,7 +39,8 @@ class Localized extends StatelessWidget {
 
   @override
   build(context) {
-    return Text(text.get(context),
+    return Text(
+      text.get(context),
       style: style,
       strutStyle: strutStyle,
       textAlign: textAlign,

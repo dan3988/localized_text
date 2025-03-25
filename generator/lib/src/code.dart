@@ -10,7 +10,8 @@ sealed class LocalizedEntry {
 
   const LocalizedEntry(this.name, [this.doc]);
 
-  void _buildClass(ClassBuilder rootClass, ClassBuilder implClass, String localizationName, bool preferNamed);
+  void _buildClass(ClassBuilder rootClass, ClassBuilder implClass,
+      String localizationName, bool preferNamed);
 
   Code _buildGetBody(bool namedLocalizationParameters);
 }
@@ -20,19 +21,17 @@ final class SimpleLocalizedEntry extends LocalizedEntry {
 
   @override
   _buildClass(rootClass, implClass, localizationName, preferNamed) {
-    rootClass.fields.add(
-        Field((b) {
-          if (doc != null) {
-            b.docs.add(doc!);
-          }
+    rootClass.fields.add(Field((b) {
+      if (doc != null) {
+        b.docs.add(doc!);
+      }
 
-          b.name = name;
-          b.static = true;
-          b.modifier = FieldModifier.constant;
-          b.type = refer(rootClass.name!);
-          b.assignment = Code('${implClass.name!}()');
-        })
-    );
+      b.name = name;
+      b.static = true;
+      b.modifier = FieldModifier.constant;
+      b.type = refer(rootClass.name!);
+      b.assignment = Code('${implClass.name!}()');
+    }));
 
     implClass.constructors.add(Constructor((b) => b.constant = true));
   }
@@ -61,22 +60,20 @@ final class ComplexLocalizedEntry extends LocalizedEntry {
 
   @override
   _buildClass(rootClass, implClass, localizationName, preferNamed) {
-    rootClass.constructors.add(
-        Constructor((b) {
-          if (doc != null) {
-            b.docs.add(doc!);
-          }
+    rootClass.constructors.add(Constructor((b) {
+      if (doc != null) {
+        b.docs.add(doc!);
+      }
 
-          b.name = name;
-          b.constant = true;
-          b.factory = true;
-          b.redirect = refer(implClass.name!);
-          b.addParameters(preferNamed, parameters, (b, parameter) {
-            b.name = parameter.name;
-            b.type = parameter.type;
-          });
-        })
-    );
+      b.name = name;
+      b.constant = true;
+      b.factory = true;
+      b.redirect = refer(implClass.name!);
+      b.addParameters(preferNamed, parameters, (b, parameter) {
+        b.name = parameter.name;
+        b.type = parameter.type;
+      });
+    }));
 
     implClass.fields.addAll([
       for (final LocalizedTextParameter(:name, :type) in parameters)
@@ -87,25 +84,25 @@ final class ComplexLocalizedEntry extends LocalizedEntry {
         })
     ]);
 
-    implClass.constructors.add(
-        Constructor((b) {
-          b.constant = true;
-          b.addParameters(preferNamed, parameters, (b, parameter) {
-            b.name = parameter.name;
-            b.toThis = true;
-          });
-        })
-    );
+    implClass.constructors.add(Constructor((b) {
+      b.constant = true;
+      b.addParameters(preferNamed, parameters, (b, parameter) {
+        b.name = parameter.name;
+        b.toThis = true;
+      });
+    }));
   }
 
   @override
   _buildGetBody(namedLocalizationParameters) {
     final buffer = StringBuffer();
     buffer.write('return l.$name(');
-    for (var i = 0; i < parameters.length; ) {
+    for (var i = 0; i < parameters.length;) {
       final LocalizedTextParameter(:name) = parameters[i];
       if (namedLocalizationParameters) {
-        buffer..write(name)..write(':');
+        buffer
+          ..write(name)
+          ..write(':');
       }
 
       buffer.write(name);
@@ -123,7 +120,8 @@ final class ComplexLocalizedEntry extends LocalizedEntry {
   }
 
   @override
-  toString() => 'ComplexLocalizedEntry($name, ${parameters.map((v) => v.name).join(', ')})';
+  toString() =>
+      'ComplexLocalizedEntry($name, ${parameters.map((v) => v.name).join(', ')})';
 }
 
 Library buildLibrary({
@@ -135,7 +133,8 @@ Library buildLibrary({
 }) {
   return Library((library) {
     final localizationsRef = refer('l.$localizationsClass');
-    library.ignoreForFile.addAll(['prefer_relative_imports', 'require_trailing_commas']);
+    library.ignoreForFile
+        .addAll(['prefer_relative_imports', 'require_trailing_commas']);
     library.directives.addAll([
       Directive.import(self),
       Directive.import(localizationsUri, as: 'l'),
@@ -149,7 +148,7 @@ Library buildLibrary({
     mainClassBuilder.name = mainClassName;
     mainClassBuilder.sealed = true;
     mainClassBuilder.constructors.add(Constructor((b) => b.constant = true));
-    mainClassBuilder.extend =TypeReference((b) {
+    mainClassBuilder.extend = TypeReference((b) {
       b.symbol = 'LocalizedTextGetter';
       b.types.add(localizationsRef);
     });
@@ -185,7 +184,8 @@ Library buildLibrary({
 }
 
 extension on ConstructorBuilder {
-  void addParameters<T>(bool named, Iterable<T> parameters, void Function(ParameterBuilder builder, T value) build) {
+  void addParameters<T>(bool named, Iterable<T> parameters,
+      void Function(ParameterBuilder builder, T value) build) {
     if (named) {
       optionalParameters.addAll([
         for (final parameter in parameters)

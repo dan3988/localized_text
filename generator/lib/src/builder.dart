@@ -34,7 +34,8 @@ class LocalizedTextKeyGenerator extends Generator {
       for (final field in type.fields) {
         final getter = field.getter;
         if (getter != null && getter.isAbstract) {
-          entries.add(SimpleLocalizedEntry(field.name, getter.documentationComment));
+          entries.add(
+              SimpleLocalizedEntry(field.name, getter.documentationComment));
         }
       }
 
@@ -42,10 +43,12 @@ class LocalizedTextKeyGenerator extends Generator {
         if (method.isAbstract) {
           final parameters = [
             for (final parameter in method.parameters)
-              LocalizedTextParameter(parameter.name, refer('${parameter.type}')),
+              LocalizedTextParameter(
+                  parameter.name, refer('${parameter.type}')),
           ];
 
-          entries.add(ComplexLocalizedEntry(method.name, method.documentationComment, parameters));
+          entries.add(ComplexLocalizedEntry(
+              method.name, method.documentationComment, parameters));
         }
       }
 

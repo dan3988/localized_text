@@ -1,3 +1,4 @@
+// dart format width=123
 library;
 
 import 'dart:io';
@@ -19,15 +20,19 @@ Generator _createGenerator(BuilderOptions options) {
   final text = file.readAsStringSync();
   final YamlMap value = loadYaml(text);
   if (value['synthetic-package'] != false) {
-    log.warning('localized_text_key_generator: l10n.yaml must have "synthetic-package: false".');
+    log.warning(
+        'localized_text_key_generator: l10n.yaml must have "synthetic-package: false".');
     return const _EmptyGenerator();
   }
 
   final String directory = value['output-dir'] ?? value['arb-dir'];
   //final String templateName = value['template-arb-file'] ?? 'app_en.arb';
-  final String outputFile = value['output-localization-file'] ?? 'app_localizations.dart';
+  final String outputFile =
+      value['output-localization-file'] ?? 'app_localizations.dart';
   final bool? noNamedParameters = value['no-use-named-parameters'];
-  final bool namedParameters = noNamedParameters != null ? !noNamedParameters : value['use-named-parameters'] ?? false;
+  final bool namedParameters = noNamedParameters != null
+      ? !noNamedParameters
+      : value['use-named-parameters'] ?? false;
   final className = value['output-class'] ?? 'AppLocalizations';
   return LocalizedTextKeyGenerator(
     //templatePath: '$directory/$templateName',
