@@ -140,5 +140,5 @@ return Builder(
 ```
 to
 ```dart
-return Localized(text: AppLocalizationsKey.text)
+return const Localized(text: AppLocalizationsKey.text)
 ```
