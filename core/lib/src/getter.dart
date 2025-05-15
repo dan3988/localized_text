@@ -9,9 +9,32 @@ abstract class LocalizedText {
   const LocalizedText();
 
   const factory LocalizedText.static(String text) = _StaticLocalizedText;
+  const factory LocalizedText.joined(List<LocalizedText> parts,
+      {LocalizedText? separator}) = JoinedLocalizedText;
 
   /// Retrieve the localized string for the given context
   String get(BuildContext context);
+}
+
+/// Concatenate multiple [LocalizedText] values together.
+/// If [separator] is not null, it's localized value will be inserted between each element.
+final class JoinedLocalizedText implements LocalizedText {
+  final List<LocalizedText> parts;
+  final LocalizedText? separator;
+
+  const JoinedLocalizedText(this.parts, {this.separator});
+
+  Iterable<String> _getSegments(BuildContext context) sync* {
+    for (final part in parts) {
+      yield part.get(context);
+    }
+  }
+
+  @override
+  get(context) {
+    final sep = separator == null ? '' : separator!.get(context);
+    return _getSegments(context).join(sep);
+  }
 }
 
 final class _StaticLocalizedText extends LocalizedText {
