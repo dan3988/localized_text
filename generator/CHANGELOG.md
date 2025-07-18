@@ -1,3 +1,6 @@
+## 0.3.0
+- Update dependencies to support `dart_style` version 3.
+
 ## 0.2.0
 - Updated version of localized_text_widget dependency 
 
