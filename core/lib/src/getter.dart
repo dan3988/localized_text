@@ -9,6 +9,7 @@ abstract class LocalizedText {
   const LocalizedText();
 
   const factory LocalizedText.static(String text) = _StaticLocalizedText;
+
   const factory LocalizedText.joined(List<LocalizedText> parts,
       {LocalizedText? separator}) = JoinedLocalizedText;
 
@@ -49,6 +50,7 @@ final class _StaticLocalizedText extends LocalizedText {
 /// Uses the instance of [T] in the given [BuildContext] to get a translated [String].
 abstract class LocalizedTextGetter<T extends Object> extends LocalizedText {
   const LocalizedTextGetter() : super();
+
   const factory LocalizedTextGetter.getter(
       String Function(T localizations) getter) = _LocalizedTextGetter;
 
@@ -60,7 +62,7 @@ abstract class LocalizedTextGetter<T extends Object> extends LocalizedText {
   }
 
   @protected
-  getFor(T localizations);
+  String getFor(T localizations);
 }
 
 final class _LocalizedTextGetter<T extends Object>
