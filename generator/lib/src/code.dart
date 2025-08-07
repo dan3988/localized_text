@@ -13,7 +13,7 @@ sealed class LocalizedEntry {
   void _buildClass(ClassBuilder rootClass, ClassBuilder implClass,
       String localizationName, bool preferNamed);
 
-  Code _buildGetBody(bool namedLocalizationParameters);
+  Code _buildGetBody(Expression parameter, bool namedLocalizationParameters);
 }
 
 final class SimpleLocalizedEntry extends LocalizedEntry {
@@ -30,14 +30,14 @@ final class SimpleLocalizedEntry extends LocalizedEntry {
       b.static = true;
       b.modifier = FieldModifier.constant;
       b.type = refer(rootClass.name!);
-      b.assignment = Code('${implClass.name!}()');
+      b.assignment = refer(implClass.name!).newInstance(const []).code;
     }));
 
     implClass.constructors.add(Constructor((b) => b.constant = true));
   }
 
   @override
-  _buildGetBody(namedLocalizationParameters) => Code('return l.$name;');
+  _buildGetBody(parameter, namedLocalizationParameters) => parameter.property(name).code;
 
   @override
   toString() => 'SimpleLocalizedEntry($name)';
@@ -94,29 +94,22 @@ final class ComplexLocalizedEntry extends LocalizedEntry {
   }
 
   @override
-  _buildGetBody(namedLocalizationParameters) {
-    final buffer = StringBuffer();
-    buffer.write('return l.$name(');
-    for (var i = 0; i < parameters.length;) {
-      final LocalizedTextParameter(:name) = parameters[i];
-      if (namedLocalizationParameters) {
-        buffer
-          ..write(name)
-          ..write(':');
-      }
-
-      buffer.write(name);
-
-      if (++i == parameters.length) {
-        break;
-      }
-
-      buffer.write(',');
+  _buildGetBody(parameter, namedLocalizationParameters) {
+    var positionalArgs = const <Expression>[];
+    var namedArguments = const <String, Expression>{};
+    if (namedLocalizationParameters) {
+      namedArguments = {
+        for (final parameter in parameters)
+          parameter.name: refer(parameter.name),
+      };
+    } else {
+      positionalArgs = parameters.map((v) => v.name).map(refer).toList();
     }
 
-    buffer.write(');');
-
-    return Code('$buffer');
+    return parameter
+        .property(name)
+        .call(positionalArgs, namedArguments)
+        .code;
   }
 
   @override
@@ -153,6 +146,9 @@ Library buildLibrary({
       b.types.add(localizationsRef);
     });
 
+    const parameterName = 'l';
+    const parameter = Reference(parameterName);
+
     for (final (index, entry) in entries.indexed) {
       final className = '_C$index';
       final clazz = Class((b) {
@@ -163,13 +159,15 @@ Library buildLibrary({
           Method((b) {
             b.name = 'getFor';
             b.annotations.add(override);
-            b.body = entry._buildGetBody(namedLocalizationParameters);
-            b.requiredParameters.add(Parameter((b) => b.name = 'l'));
+            b.body = entry._buildGetBody(parameter, namedLocalizationParameters);
+            b.requiredParameters.add(
+              Parameter((b) => b.name = parameterName),
+            );
           }),
           Method((b) {
             b.name = 'toString';
             b.annotations.add(override);
-            b.body = Code('return \'$mainClassName("${entry.name}")\';');
+            b.body = literalString('$mainClassName.${entry.name}').code;
           }),
         ]);
 

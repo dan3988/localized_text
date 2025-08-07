@@ -1,3 +1,4 @@
+// dart format width=80
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
@@ -38,14 +39,10 @@ final class _C0 extends AppText {
   const _C0();
 
   @override
-  getFor(l) {
-    return l.test;
-  }
+  getFor(l) => l.test;
 
   @override
-  toString() {
-    return 'AppText("test")';
-  }
+  toString() => 'AppText.test';
 }
 
 final class _C1 extends AppText {
@@ -59,14 +56,13 @@ final class _C1 extends AppText {
   final String lastName;
 
   @override
-  getFor(l) {
-    return l.placeholders(firstName, lastName);
-  }
+  getFor(l) => l.placeholders(
+    firstName,
+    lastName,
+  );
 
   @override
-  toString() {
-    return 'AppText("placeholders")';
-  }
+  toString() => 'AppText.placeholders';
 }
 
 final class _C2 extends AppText {
@@ -75,12 +71,8 @@ final class _C2 extends AppText {
   final String gender;
 
   @override
-  getFor(l) {
-    return l.pronoun(gender);
-  }
+  getFor(l) => l.pronoun(gender);
 
   @override
-  toString() {
-    return 'AppText("pronoun")';
-  }
+  toString() => 'AppText.pronoun';
 }
