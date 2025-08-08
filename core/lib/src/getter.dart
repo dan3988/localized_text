@@ -58,11 +58,11 @@ abstract class LocalizedTextGetter<T extends Object> extends LocalizedText {
   get(context) {
     final localizations = Localizations.of<T>(context, T);
     assert(localizations != null, 'No localizations in scope.');
-    return getFor(localizations!);
+    return getFor(context, localizations!);
   }
 
   @protected
-  String getFor(T localizations);
+  String getFor(BuildContext context, T localizations);
 }
 
 final class _LocalizedTextGetter<T extends Object>
@@ -72,7 +72,7 @@ final class _LocalizedTextGetter<T extends Object>
   const _LocalizedTextGetter(this._getter);
 
   @override
-  getFor(localizations) {
+  getFor(_, localizations) {
     return _getter(localizations);
   }
 }

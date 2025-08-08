@@ -1,3 +1,6 @@
+## 1.0.0
+- Allow LocalizedText instances to be passed to String placeholders
+
 ## 0.3.0
 - Update dependencies to support `dart_style` version 3.
 

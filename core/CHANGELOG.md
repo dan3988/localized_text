@@ -1,3 +1,7 @@
+## 0.3.0
+- Fixed LocalizedTextGetter.getFor having unspecified return type
+- Added BuildContext parameter to LocalizedTextGetter.getFor
+
 ## 0.2.0
 - Added JoinedLocalizedText implementation of LocalizedText
 

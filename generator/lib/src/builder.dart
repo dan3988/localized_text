@@ -35,20 +35,34 @@ class LocalizedTextKeyGenerator extends Generator {
         final getter = field.getter;
         if (getter != null && getter.isAbstract) {
           entries.add(
-              SimpleLocalizedEntry(field.name, getter.documentationComment));
+            SimpleLocalizedEntry(
+              field.name,
+              getter.documentationComment,
+            ),
+          );
         }
       }
 
       for (final method in type.methods) {
         if (method.isAbstract) {
-          final parameters = [
+          final parameters = <LocalizedTextParameter>[
             for (final parameter in method.parameters)
-              LocalizedTextParameter(
-                  parameter.name, refer('${parameter.type}')),
+              if (parameter.type.isDartCoreString)
+                LocalizedTextParameter.string(parameter.name)
+              else
+                LocalizedTextParameter(
+                  parameter.name,
+                  refer('${parameter.type}'),
+                )
           ];
 
-          entries.add(ComplexLocalizedEntry(
-              method.name, method.documentationComment, parameters));
+          entries.add(
+            ComplexLocalizedEntry(
+              method.name,
+              method.documentationComment,
+              parameters,
+            ),
+          );
         }
       }
 

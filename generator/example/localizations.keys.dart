@@ -18,15 +18,15 @@ sealed class AppText extends LocalizedTextGetter<l.AppLocalizations> {
   /// In en, this message translates to:
   /// **'Hello {firstName} {lastName}'**
   const factory AppText.placeholders({
-    required String firstName,
-    required String lastName,
+    required Object firstName,
+    required Object lastName,
   }) = _C1;
 
   /// A gendered message
   ///
   /// In en, this message translates to:
   /// **'{gender, select, male{he} female{she} other{they}}'**
-  const factory AppText.pronoun({required String gender}) = _C2;
+  const factory AppText.pronoun({required Object gender}) = _C2;
 
   /// No description provided for @test.
   ///
@@ -39,7 +39,11 @@ final class _C0 extends AppText {
   const _C0();
 
   @override
-  getFor(l) => l.test;
+  getFor(
+      c,
+      l,
+      ) =>
+      l.test;
 
   @override
   toString() => 'AppText.test';
@@ -51,15 +55,23 @@ final class _C1 extends AppText {
     required this.lastName,
   });
 
-  final String firstName;
+  final Object firstName;
 
-  final String lastName;
+  final Object lastName;
 
   @override
-  getFor(l) => l.placeholders(
-    firstName,
-    lastName,
-  );
+  getFor(
+      c,
+      l,
+      ) =>
+      l.placeholders(
+        firstName is LocalizedText
+            ? (firstName as LocalizedText).get(c)
+            : firstName.toString(),
+        lastName is LocalizedText
+            ? (lastName as LocalizedText).get(c)
+            : lastName.toString(),
+      );
 
   @override
   toString() => 'AppText.placeholders';
@@ -68,10 +80,16 @@ final class _C1 extends AppText {
 final class _C2 extends AppText {
   const _C2({required this.gender});
 
-  final String gender;
+  final Object gender;
 
   @override
-  getFor(l) => l.pronoun(gender);
+  getFor(
+      c,
+      l,
+      ) =>
+      l.pronoun(gender is LocalizedText
+          ? (gender as LocalizedText).get(c)
+          : gender.toString());
 
   @override
   toString() => 'AppText.pronoun';

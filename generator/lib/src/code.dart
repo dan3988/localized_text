@@ -13,7 +13,8 @@ sealed class LocalizedEntry {
   void _buildClass(ClassBuilder rootClass, ClassBuilder implClass,
       String localizationName, bool preferNamed);
 
-  Code _buildGetBody(Expression parameter, bool namedLocalizationParameters);
+  Code _buildGetBody(Expression contextParameter,
+      Expression localizationsParameter, bool namedLocalizationParameters);
 }
 
 final class SimpleLocalizedEntry extends LocalizedEntry {
@@ -37,7 +38,13 @@ final class SimpleLocalizedEntry extends LocalizedEntry {
   }
 
   @override
-  _buildGetBody(parameter, namedLocalizationParameters) => parameter.property(name).code;
+  _buildGetBody(
+    contextParameter,
+    localizationsParameter,
+    namedLocalizationParameters,
+  ) {
+    return localizationsParameter.property(name).code;
+  }
 
   @override
   toString() => 'SimpleLocalizedEntry($name)';
@@ -45,9 +52,14 @@ final class SimpleLocalizedEntry extends LocalizedEntry {
 
 final class LocalizedTextParameter {
   final String name;
+  final bool isString;
   final Reference type;
 
-  const LocalizedTextParameter(this.name, this.type);
+  const LocalizedTextParameter(this.name, this.type) : isString = false;
+
+  const LocalizedTextParameter.string(this.name)
+      : type = const Reference('Object'),
+        isString = true;
 
   @override
   toString() => 'LocalizedTextParameter($type $name)';
@@ -94,19 +106,39 @@ final class ComplexLocalizedEntry extends LocalizedEntry {
   }
 
   @override
-  _buildGetBody(parameter, namedLocalizationParameters) {
+  _buildGetBody(
+    contextParameter,
+    localizationsParameter,
+    namedLocalizationParameters,
+  ) {
     var positionalArgs = const <Expression>[];
     var namedArguments = const <String, Expression>{};
+    final blocks = <Code>[];
+
+    void Function(String name, Expression value) addParameter;
+
     if (namedLocalizationParameters) {
-      namedArguments = {
-        for (final parameter in parameters)
-          parameter.name: refer(parameter.name),
-      };
+      namedArguments = {};
+      addParameter = (name, value) => namedArguments[name] = value;
     } else {
-      positionalArgs = parameters.map((v) => v.name).map(refer).toList();
+      positionalArgs = [];
+      addParameter = (_, value) => positionalArgs.add(value);
     }
 
-    return parameter
+    for (final parameter in parameters) {
+      Expression expression = refer(parameter.name);
+      if (parameter.isString) {
+        const textType = Reference('LocalizedText');
+        expression = expression.isA(textType).conditional(
+              expression.asA(textType).property('get').call([contextParameter]),
+              expression.property('toString').call(const []),
+            );
+      }
+
+      addParameter(parameter.name, expression);
+    }
+
+    return localizationsParameter
         .property(name)
         .call(positionalArgs, namedArguments)
         .code;
@@ -146,8 +178,11 @@ Library buildLibrary({
       b.types.add(localizationsRef);
     });
 
-    const parameterName = 'l';
-    const parameter = Reference(parameterName);
+    const contextParameterName = 'c';
+    const contextParameter = Reference(contextParameterName);
+
+    const localizationsParameterName = 'l';
+    const localizationsParameter = Reference(localizationsParameterName);
 
     for (final (index, entry) in entries.indexed) {
       final className = '_C$index';
@@ -159,10 +194,16 @@ Library buildLibrary({
           Method((b) {
             b.name = 'getFor';
             b.annotations.add(override);
-            b.body = entry._buildGetBody(parameter, namedLocalizationParameters);
-            b.requiredParameters.add(
-              Parameter((b) => b.name = parameterName),
+            b.body = entry._buildGetBody(
+              contextParameter,
+              localizationsParameter,
+              namedLocalizationParameters,
             );
+
+            b.requiredParameters.addAll([
+              Parameter((b) => b.name = contextParameterName),
+              Parameter((b) => b.name = localizationsParameterName),
+            ]);
           }),
           Method((b) {
             b.name = 'toString';
