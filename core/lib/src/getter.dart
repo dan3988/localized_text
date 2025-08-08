@@ -2,6 +2,10 @@ import 'package:flutter/widgets.dart';
 
 /// Getter for the translation of a [String] for the locale in a given [BuildContext].
 abstract class LocalizedText {
+  /// Get localized text if [obj] is a [LocalizedText] instance, otherwise call [toString].
+  static String getText(BuildContext context, Object obj) =>
+      obj is LocalizedText ? obj.get(context) : obj.toString();
+
   /// If the given [text] is null, it falls back to the provided [fallback] instance.
   factory LocalizedText.fallback(String? text, LocalizedText fallback) =>
       text == null ? fallback : _StaticLocalizedText(text);

@@ -65,12 +65,14 @@ final class _C1 extends AppText {
     l,
   ) =>
       l.placeholders(
-        firstName is LocalizedText
-            ? (firstName as LocalizedText).get(c)
-            : firstName.toString(),
-        lastName is LocalizedText
-            ? (lastName as LocalizedText).get(c)
-            : lastName.toString(),
+        LocalizedText.getText(
+          c,
+          firstName,
+        ),
+        LocalizedText.getText(
+          c,
+          lastName,
+        ),
       );
 
   @override
@@ -87,9 +89,10 @@ final class _C2 extends AppText {
     c,
     l,
   ) =>
-      l.pronoun(gender is LocalizedText
-          ? (gender as LocalizedText).get(c)
-          : gender.toString());
+      l.pronoun(LocalizedText.getText(
+        c,
+        gender,
+      ));
 
   @override
   toString() => 'AppText.pronoun';

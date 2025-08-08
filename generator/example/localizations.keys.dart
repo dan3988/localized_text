@@ -8,7 +8,7 @@
 // ignore_for_file: prefer_relative_imports, require_trailing_commas
 
 import 'package:localized_text_widget/localized_text_widget.dart';
-import 'localizations.dart' as l;
+import 'package:localized_text_example/l10n/localizations.dart' as l;
 
 sealed class AppText extends LocalizedTextGetter<l.AppLocalizations> {
   const AppText();
@@ -40,9 +40,9 @@ final class _C0 extends AppText {
 
   @override
   getFor(
-      c,
-      l,
-      ) =>
+    c,
+    l,
+  ) =>
       l.test;
 
   @override
@@ -61,16 +61,18 @@ final class _C1 extends AppText {
 
   @override
   getFor(
-      c,
-      l,
-      ) =>
+    c,
+    l,
+  ) =>
       l.placeholders(
-        firstName is LocalizedText
-            ? (firstName as LocalizedText).get(c)
-            : firstName.toString(),
-        lastName is LocalizedText
-            ? (lastName as LocalizedText).get(c)
-            : lastName.toString(),
+        LocalizedText.getText(
+          c,
+          firstName,
+        ),
+        LocalizedText.getText(
+          c,
+          lastName,
+        ),
       );
 
   @override
@@ -84,12 +86,13 @@ final class _C2 extends AppText {
 
   @override
   getFor(
-      c,
-      l,
-      ) =>
-      l.pronoun(gender is LocalizedText
-          ? (gender as LocalizedText).get(c)
-          : gender.toString());
+    c,
+    l,
+  ) =>
+      l.pronoun(LocalizedText.getText(
+        c,
+        gender,
+      ));
 
   @override
   toString() => 'AppText.pronoun';

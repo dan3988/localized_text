@@ -113,7 +113,6 @@ final class ComplexLocalizedEntry extends LocalizedEntry {
   ) {
     var positionalArgs = const <Expression>[];
     var namedArguments = const <String, Expression>{};
-    final blocks = <Code>[];
 
     void Function(String name, Expression value) addParameter;
 
@@ -128,11 +127,9 @@ final class ComplexLocalizedEntry extends LocalizedEntry {
     for (final parameter in parameters) {
       Expression expression = refer(parameter.name);
       if (parameter.isString) {
-        const textType = Reference('LocalizedText');
-        expression = expression.isA(textType).conditional(
-              expression.asA(textType).property('get').call([contextParameter]),
-              expression.property('toString').call(const []),
-            );
+        expression = const Reference('LocalizedText')
+            .property('getText')
+            .call([contextParameter, expression]);
       }
 
       addParameter(parameter.name, expression);
