@@ -14,7 +14,7 @@ return Builder(
 ```
 to
 ```dart
-return Localized(text: LocalizedTextGetter<AppLocalizations>.getter((l) => l.text))
+return Localized(text: LocalizationMessage<AppLocalizations>.getter((l) => l.text))
 ```
 or when using the code generator
 ```dart

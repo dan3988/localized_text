@@ -1,6 +1,8 @@
 ## 0.3.0
-- Fixed LocalizedTextGetter.getFor having unspecified return type
-- Added BuildContext parameter to LocalizedTextGetter.getFor
+- Renamed `LocalizedText` to `Message`
+- Renamed `LocalizedTextGetter` to `LocalizationMessage`
+- Fixed `LocalizationMessage.getFor` having unspecified return type
+- Added BuildContext parameter to `LocalizationMessage.getFor`
 
 ## 0.2.0
 - Added JoinedLocalizedText implementation of LocalizedText

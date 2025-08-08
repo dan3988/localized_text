@@ -127,8 +127,8 @@ final class ComplexLocalizedEntry extends LocalizedEntry {
     for (final parameter in parameters) {
       Expression expression = refer(parameter.name);
       if (parameter.isString) {
-        expression = const Reference('LocalizedText')
-            .property('getText')
+        expression = const Reference('Message')
+            .property('getString')
             .call([contextParameter, expression]);
       }
 
@@ -171,7 +171,7 @@ Library buildLibrary({
     mainClassBuilder.sealed = true;
     mainClassBuilder.constructors.add(Constructor((b) => b.constant = true));
     mainClassBuilder.extend = TypeReference((b) {
-      b.symbol = 'LocalizedTextGetter';
+      b.symbol = 'LocalizationMessage';
       b.types.add(localizationsRef);
     });
 
@@ -189,7 +189,7 @@ Library buildLibrary({
         b.extend = refer(mainClassName);
         b.methods.addAll([
           Method((b) {
-            b.name = 'getFor';
+            b.name = 'getText';
             b.annotations.add(override);
             b.body = entry._buildGetBody(
               contextParameter,

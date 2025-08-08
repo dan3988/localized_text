@@ -1,82 +1,84 @@
 import 'package:flutter/widgets.dart';
 
 /// Getter for the translation of a [String] for the locale in a given [BuildContext].
-abstract class LocalizedText {
-  /// Get localized text if [obj] is a [LocalizedText] instance, otherwise call [toString].
-  static String getText(BuildContext context, Object obj) =>
-      obj is LocalizedText ? obj.get(context) : obj.toString();
+abstract class Message {
+  /// Return the resolved text if [obj] is a [Message] instance, otherwise the result of [toString] is returned.
+  static String getString(BuildContext context, Object obj) =>
+      obj is Message ? obj.resolve(context) : obj.toString();
 
   /// If the given [text] is null, it falls back to the provided [fallback] instance.
-  factory LocalizedText.fallback(String? text, LocalizedText fallback) =>
-      text == null ? fallback : _StaticLocalizedText(text);
+  factory Message.fallback(String? text, Message fallback) =>
+      text == null ? fallback : StaticMessage(text);
 
-  const LocalizedText();
+  const Message();
 
-  const factory LocalizedText.static(String text) = _StaticLocalizedText;
+  const factory Message.static(String text) = StaticMessage;
 
-  const factory LocalizedText.joined(List<LocalizedText> parts,
-      {LocalizedText? separator}) = JoinedLocalizedText;
+  const factory Message.joined(
+    List<Message> parts, {
+    Message? separator,
+  }) = JoinedMessage;
 
   /// Retrieve the localized string for the given context
-  String get(BuildContext context);
+  String resolve(BuildContext context);
 }
 
-/// Concatenate multiple [LocalizedText] values together.
+/// Concatenate multiple [Message] values together.
 /// If [separator] is not null, it's localized value will be inserted between each element.
-final class JoinedLocalizedText implements LocalizedText {
-  final List<LocalizedText> parts;
-  final LocalizedText? separator;
+final class JoinedMessage implements Message {
+  final List<Message> parts;
+  final Message? separator;
 
-  const JoinedLocalizedText(this.parts, {this.separator});
+  const JoinedMessage(this.parts, {this.separator});
 
   Iterable<String> _getSegments(BuildContext context) sync* {
     for (final part in parts) {
-      yield part.get(context);
+      yield part.resolve(context);
     }
   }
 
   @override
-  get(context) {
-    final sep = separator == null ? '' : separator!.get(context);
+  resolve(context) {
+    final sep = separator == null ? '' : separator!.resolve(context);
     return _getSegments(context).join(sep);
   }
 }
 
-final class _StaticLocalizedText extends LocalizedText {
+final class StaticMessage extends Message {
   final String text;
 
-  const _StaticLocalizedText(this.text) : super();
+  const StaticMessage(this.text) : super();
 
   @override
-  get(_) => text;
+  resolve(_) => text;
 }
 
 /// Uses the instance of [T] in the given [BuildContext] to get a translated [String].
-abstract class LocalizedTextGetter<T extends Object> extends LocalizedText {
-  const LocalizedTextGetter() : super();
+abstract class LocalizationMessage<T extends Object> extends Message {
+  const LocalizationMessage() : super();
 
-  const factory LocalizedTextGetter.getter(
-      String Function(T localizations) getter) = _LocalizedTextGetter;
+  const factory LocalizationMessage.getter(
+      String Function(T localizations) getter) = _LocalizationMessage;
 
   @override
-  get(context) {
+  resolve(context) {
     final localizations = Localizations.of<T>(context, T);
     assert(localizations != null, 'No localizations in scope.');
-    return getFor(context, localizations!);
+    return getText(context, localizations!);
   }
 
   @protected
-  String getFor(BuildContext context, T localizations);
+  String getText(BuildContext context, T localizations);
 }
 
-final class _LocalizedTextGetter<T extends Object>
-    extends LocalizedTextGetter<T> {
+final class _LocalizationMessage<T extends Object>
+    extends LocalizationMessage<T> {
   final String Function(T localizations) _getter;
 
-  const _LocalizedTextGetter(this._getter);
+  const _LocalizationMessage(this._getter);
 
   @override
-  getFor(_, localizations) {
+  getText(_, localizations) {
     return _getter(localizations);
   }
 }

@@ -1,6 +1,6 @@
 # localized_text_key_generator [![Pub Package](https://img.shields.io/pub/v/localized_text_key_generator.svg)](https://pub.dev/packages/localized_text_key_generator)
 
-Code generator that creates an implementation of [LocalizedText](../core/lib/src/getter.dart) for each key in an .arb file
+Code generator that creates an implementation of [Message](../core/lib/src/getter.dart) for each key in an .arb file
 
 ## Configuration
 
@@ -49,84 +49,104 @@ targets:
 
 Output:
 ```dart
+// dart format width=80
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+// **************************************************************************
+// LocalizationResolverGenerator
+// **************************************************************************
+
+// ignore_for_file: prefer_relative_imports, require_trailing_commas
+
 import 'package:localized_text_widget/localized_text_widget.dart';
 import 'package:localized_text_example/l10n/localizations.dart' as l;
 
-sealed class AppLocalizationsKey
-    extends LocalizedTextGetter<l.AppLocalizations> {
-  const AppLocalizationsKey();
+sealed class AppText extends LocalizationMessage<l.AppLocalizations> {
+  const AppText();
 
   /// No description provided for @placeholders.
   ///
   /// In en, this message translates to:
   /// **'Hello {firstName} {lastName}'**
-  const factory AppLocalizationsKey.placeholders(
-    String firstName,
-    String lastName,
-  ) = _C1;
+  const factory AppText.placeholders({
+    required Object firstName,
+    required Object lastName,
+  }) = _C1;
 
   /// A gendered message
   ///
   /// In en, this message translates to:
   /// **'{gender, select, male{he} female{she} other{they}}'**
-  const factory AppLocalizationsKey.pronoun(String gender) = _C2;
+  const factory AppText.pronoun({required Object gender}) = _C2;
 
-  /// No description provided for @text.
+  /// No description provided for @test.
   ///
   /// In en, this message translates to:
   /// **'Text'**
-  static const AppLocalizationsKey text = _C0();
+  static const AppText test = _C0();
 }
 
-final class _C0 extends AppLocalizationsKey {
+final class _C0 extends AppText {
   const _C0();
 
   @override
-  getFor(l) {
-    return l.text;
-  }
+  getText(
+    c,
+    l,
+  ) =>
+      l.test;
 
   @override
-  toString() {
-    return 'AppLocalizationsKey("text")';
-  }
+  toString() => 'AppText.test';
 }
 
-final class _C1 extends AppLocalizationsKey {
-  const _C1(
-    this.firstName,
-    this.lastName,
-  );
+final class _C1 extends AppText {
+  const _C1({
+    required this.firstName,
+    required this.lastName,
+  });
 
-  final String firstName;
+  final Object firstName;
 
-  final String lastName;
-
-  @override
-  getFor(l) {
-    return l.placeholders(firstName, lastName);
-  }
+  final Object lastName;
 
   @override
-  toString() {
-    return 'AppLocalizationsKey("placeholders")';
-  }
+  getText(
+    c,
+    l,
+  ) =>
+      l.placeholders(
+        Message.getString(
+          c,
+          firstName,
+        ),
+        Message.getString(
+          c,
+          lastName,
+        ),
+      );
+
+  @override
+  toString() => 'AppText.placeholders';
 }
 
-final class _C2 extends AppLocalizationsKey {
-  const _C2(this.gender);
+final class _C2 extends AppText {
+  const _C2({required this.gender});
 
-  final String gender;
-
-  @override
-  getFor(l) {
-    return l.pronoun(gender);
-  }
+  final Object gender;
 
   @override
-  toString() {
-    return 'AppLocalizationsKey("pronoun")';
-  }
+  getText(
+    c,
+    l,
+  ) =>
+      l.pronoun(Message.getString(
+        c,
+        gender,
+      ));
+
+  @override
+  toString() => 'AppText.pronoun';
 }
 ```
 

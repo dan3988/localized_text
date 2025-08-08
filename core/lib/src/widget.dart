@@ -6,7 +6,7 @@ import 'getter.dart';
 @immutable
 class Localized extends StatelessWidget {
   /// The getter for the text to display
-  final LocalizedText text;
+  final Message text;
 
   /// The value to be passed to [Text.style]
   final TextStyle? style;
@@ -68,7 +68,7 @@ class Localized extends StatelessWidget {
   @override
   build(context) {
     return Text(
-      text.get(context),
+      text.resolve(context),
       style: style,
       strutStyle: strutStyle,
       textAlign: textAlign,

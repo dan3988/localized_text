@@ -5,13 +5,13 @@ import 'package:source_gen/source_gen.dart';
 import 'code.dart';
 import 'settings.dart';
 
-class LocalizedTextKeyGenerator extends Generator {
+class LocalizationResolverGenerator extends Generator {
   final String className;
   final String classPath;
   final bool namedParameters;
   final Settings settings;
 
-  LocalizedTextKeyGenerator({
+  LocalizationResolverGenerator({
     required this.className,
     required this.classPath,
     required this.namedParameters,

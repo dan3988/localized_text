@@ -34,7 +34,7 @@ Generator _createGenerator(BuilderOptions options) {
       ? !noNamedParameters
       : value['use-named-parameters'] ?? false;
   final className = value['output-class'] ?? 'AppLocalizations';
-  return LocalizedTextKeyGenerator(
+  return LocalizationResolverGenerator(
     //templatePath: '$directory/$templateName',
     classPath: '$directory/$outputFile',
     className: className,

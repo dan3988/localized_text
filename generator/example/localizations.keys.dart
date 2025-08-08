@@ -2,15 +2,15 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
-// LocalizedTextKeyGenerator
+// LocalizationResolverGenerator
 // **************************************************************************
 
 // ignore_for_file: prefer_relative_imports, require_trailing_commas
 
 import 'package:localized_text_widget/localized_text_widget.dart';
-import 'package:localized_text_example/l10n/localizations.dart' as l;
+import 'localizations.dart' as l;
 
-sealed class AppText extends LocalizedTextGetter<l.AppLocalizations> {
+sealed class AppText extends LocalizationMessage<l.AppLocalizations> {
   const AppText();
 
   /// No description provided for @placeholders.
@@ -39,7 +39,7 @@ final class _C0 extends AppText {
   const _C0();
 
   @override
-  getFor(
+  getText(
     c,
     l,
   ) =>
@@ -60,16 +60,16 @@ final class _C1 extends AppText {
   final Object lastName;
 
   @override
-  getFor(
+  getText(
     c,
     l,
   ) =>
       l.placeholders(
-        LocalizedText.getText(
+        Message.getString(
           c,
           firstName,
         ),
-        LocalizedText.getText(
+        Message.getString(
           c,
           lastName,
         ),
@@ -85,11 +85,11 @@ final class _C2 extends AppText {
   final Object gender;
 
   @override
-  getFor(
+  getText(
     c,
     l,
   ) =>
-      l.pronoun(LocalizedText.getText(
+      l.pronoun(Message.getString(
         c,
         gender,
       ));
