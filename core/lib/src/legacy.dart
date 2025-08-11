@@ -13,13 +13,12 @@ abstract class LocalizedText implements Message {
   const factory LocalizedText.static(String text) = StaticMessage;
 
   const factory LocalizedText.joined(
-      List<Message> parts, {
-        Message? separator,
-      }) = JoinedMessage;
+    List<Message> parts, {
+    Message? separator,
+  }) = JoinedMessage;
 
   @override
   resolve(context) => get(context);
 
   String get(BuildContext context);
 }
-

@@ -19,8 +19,11 @@ abstract class Message {
 
   const Message();
 
+  /// Returns the value of [text] regardless of the current locale.
   const factory Message.static(String text) = StaticMessage;
 
+  /// Concatenate the text of multiple [Message] instances together.
+  /// If [separator] is not null, it's localized value will be inserted between each element.
   const factory Message.joined(
     List<Message> parts, {
     Message? separator,
@@ -30,7 +33,7 @@ abstract class Message {
   String resolve(BuildContext context);
 }
 
-/// Concatenate multiple [Message] values together.
+/// Concatenate the text of multiple [Message] instances together.
 /// If [separator] is not null, it's localized value will be inserted between each element.
 final class JoinedMessage extends Message with _LegacyMessageMixin {
   final List<Message> parts;
@@ -54,6 +57,7 @@ final class JoinedMessage extends Message with _LegacyMessageMixin {
   }
 }
 
+/// Returns the value of [text] regardless of the current context's locale.
 final class StaticMessage extends Message with _LegacyMessageMixin {
   final String text;
 
@@ -64,7 +68,8 @@ final class StaticMessage extends Message with _LegacyMessageMixin {
 }
 
 /// Uses the instance of [T] in the given [BuildContext] to get a translated [String].
-abstract class LocalizationMessage<T extends Object> extends Message with _LegacyMessageMixin {
+abstract class LocalizationMessage<T extends Object> extends Message
+    with _LegacyMessageMixin {
   const LocalizationMessage() : super();
 
   const factory LocalizationMessage.getter(
