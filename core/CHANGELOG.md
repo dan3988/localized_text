@@ -1,4 +1,4 @@
-## 0.3.0
+## 0.4.0
 - Renamed `LocalizedText` to `Message`
 - Renamed `LocalizedTextGetter` to `LocalizationMessage`
 - Fixed `LocalizationMessage.getFor` having unspecified return type

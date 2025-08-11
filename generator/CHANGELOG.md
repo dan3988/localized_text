@@ -1,5 +1,6 @@
-## 1.0.0
-- Allow LocalizedText instances to be passed to String placeholders
+## 0.4.0
+- Updated version of `localized_text_widget`
+- Allow `Message` instances to be passed in place of a String placeholder
 
 ## 0.3.0
 - Update dependencies to support `dart_style` version 3.
