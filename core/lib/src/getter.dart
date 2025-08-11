@@ -1,4 +1,11 @@
 import 'package:flutter/widgets.dart';
+import 'package:localized_text_widget/src/legacy.dart';
+
+mixin _LegacyMessageMixin on Message implements LocalizedText {
+  @override
+  @Deprecated('Use `resolve` instead.')
+  get(context) => resolve(context);
+}
 
 /// Getter for the translation of a [String] for the locale in a given [BuildContext].
 abstract class Message {
@@ -25,7 +32,7 @@ abstract class Message {
 
 /// Concatenate multiple [Message] values together.
 /// If [separator] is not null, it's localized value will be inserted between each element.
-final class JoinedMessage implements Message {
+final class JoinedMessage extends Message with _LegacyMessageMixin {
   final List<Message> parts;
   final Message? separator;
 
@@ -38,13 +45,16 @@ final class JoinedMessage implements Message {
   }
 
   @override
+  get(context) => resolve(context);
+
+  @override
   resolve(context) {
     final sep = separator == null ? '' : separator!.resolve(context);
     return _getSegments(context).join(sep);
   }
 }
 
-final class StaticMessage extends Message {
+final class StaticMessage extends Message with _LegacyMessageMixin {
   final String text;
 
   const StaticMessage(this.text) : super();
@@ -54,7 +64,7 @@ final class StaticMessage extends Message {
 }
 
 /// Uses the instance of [T] in the given [BuildContext] to get a translated [String].
-abstract class LocalizationMessage<T extends Object> extends Message {
+abstract class LocalizationMessage<T extends Object> extends Message with _LegacyMessageMixin {
   const LocalizationMessage() : super();
 
   const factory LocalizationMessage.getter(
